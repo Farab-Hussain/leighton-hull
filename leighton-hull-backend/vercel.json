@@ -2,6 +2,14 @@
   "version": 2,
   "name": "leighton-hull-backend",
   "buildCommand": "npm run build",
+  "functions": {
+    "api/index.ts": {
+      "includeFiles": [
+        "dist/**",
+        "env/.template.env"
+      ]
+    }
+  },
   "builds": [
     {
       "src": "api/index.ts",

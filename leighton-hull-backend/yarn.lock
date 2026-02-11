@@ -6612,6 +6612,7 @@ __metadata:
     helmet: "npm:^8.1.0"
     husky: "npm:^9.1.7"
     jest: "npm:^29.5.0"
+    module-alias: "npm:^2.3.4"
     nodemailer: "npm:^8.0.0"
     prettier: "npm:^3.0.0"
     prisma: "npm:^6.13.0"
@@ -7118,6 +7119,13 @@ __metadata:
   bin:
     mkdirp: bin/cmd.js
   checksum: 10c0/46ea0f3ffa8bc6a5bc0c7081ffc3907777f0ed6516888d40a518c5111f8366d97d2678911ad1a6882bf592fa9de6c784fea32e1687bb94e1f4944170af48a5cf
+  languageName: node
+  linkType: hard
+
+"module-alias@npm:^2.3.4":
+  version: 2.3.4
+  resolution: "module-alias@npm:2.3.4"
+  checksum: 10c0/c0af11f640410d928db9dd62ba66a39d55475ff5d9e8943bb753b6688a35fd07f0ec950285fb0519d337bcd5bf9503d54ef1d557754a38aa371b095d1197a8b8
   languageName: node
   linkType: hard
 

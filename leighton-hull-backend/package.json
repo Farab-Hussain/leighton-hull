@@ -38,6 +38,7 @@
     "express-useragent": "^1.0.15",
     "googleapis": "^164.1.0",
     "helmet": "^8.1.0",
+    "module-alias": "^2.3.4",
     "nodemailer": "^8.0.0",
     "reflect-metadata": "^0.2.0",
     "resend": "^6.4.0",
