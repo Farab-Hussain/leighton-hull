@@ -1,0 +1,124 @@
+pipeline {
+    agent { label 'leightonHull' }
+
+    environment {
+        STAGING_DEPLOY_PATH = "/var/www/projects/api-staging"
+        PROD_DEPLOY_PATH    = "/var/www/projects/api-prod"
+
+        SLACK_WEBHOOK_URL = credentials('slack_webhook_leightonHull')
+
+        // Keep the same target path for the service account key inside the repo
+        GCP_SA_KEY_PATH = 'secrets/credentials.json'
+    }
+
+    parameters {
+        string(name: 'SLACK_CHANNEL', defaultValue: '#leighton-hull-ci-cd', description: 'Slack channel (used in display only)')
+        string(name: 'PROJECT_NAME',  defaultValue: 'Leighton Hull Backend', description: 'Project name for Slack messages')
+    }
+
+    stages {
+        stage('Init') {
+            steps {
+                script {
+                    def message = ":rocket: *${params.PROJECT_NAME}* #${env.BUILD_NUMBER} has started on branch `${env.BRANCH_NAME}`.\n<${env.BUILD_URL}|Follow the build here>"
+                    sh """
+                        curl -X POST -H 'Content-type: application/json' \
+                        --data '{"text": "${message.replaceAll('"', '\\"')}"}' \
+                        '${env.SLACK_WEBHOOK_URL}'
+                    """
+                }
+            }
+        }
+
+        stage('Deploy to Staging') {
+            when { branch 'dev' }
+            steps {
+                configFileProvider([configFile(fileId: 'api-staging', targetLocation: 'env/.staging.env')]) {
+                    withCredentials([file(credentialsId: 'gcp_service_account', variable: 'GCP_KEYFILE')]) {
+                        sh '''
+                            set -euxo pipefail
+
+                            # --- credentials handling (mirrors "callinger" style) ---
+                            install -d -m 700 secrets
+                            rm -f "$GCP_SA_KEY_PATH"
+                            cp "$GCP_KEYFILE" "$GCP_SA_KEY_PATH"
+                            # -------------------------------------------------------
+
+                            # keep your original rsync logic, only exclude .git
+                            rsync -av --delete --exclude='.git' ./ "$STAGING_DEPLOY_PATH"
+
+                            cd "$STAGING_DEPLOY_PATH"
+
+                            # load env and set GOOGLE_APPLICATION_CREDENTIALS for runtime
+                            if [ -f env/.staging.env ]; then
+                              set -a
+                              . env/.staging.env
+                              set +a
+                            fi
+                            export GOOGLE_APPLICATION_CREDENTIALS="$PWD/$GCP_SA_KEY_PATH"
+
+                            npm run start:staging
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Deploy to Production') {
+            when { branch 'master' }
+            steps {
+                configFileProvider([configFile(fileId: 'api-prod', targetLocation: 'env/.prod.env')]) {
+                    withCredentials([file(credentialsId: 'gcp_service_account', variable: 'GCP_KEYFILE')]) {
+                        sh '''
+                            set -euxo pipefail
+
+                            # --- credentials handling (mirrors "callinger" style) ---
+                            install -d -m 700 secrets
+                            rm -f "$GCP_SA_KEY_PATH"
+                            cp "$GCP_KEYFILE" "$GCP_SA_KEY_PATH"
+                            # -------------------------------------------------------
+
+                            # keep your original rsync logic, only exclude .git
+                            rsync -av --delete --exclude='.git' ./ "$PROD_DEPLOY_PATH"
+
+                            cd "$PROD_DEPLOY_PATH"
+
+                            # load env and set GOOGLE_APPLICATION_CREDENTIALS for runtime
+                            if [ -f env/.prod.env ]; then
+                              set -a
+                              . env/.prod.env
+                              set +a
+                            fi
+                            export GOOGLE_APPLICATION_CREDENTIALS="$PWD/$GCP_SA_KEY_PATH"
+
+                            npm run start:prod
+                        '''
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            script {
+                def message = ":white_check_mark: *${params.PROJECT_NAME}* #${env.BUILD_NUMBER} succeeded on branch `${env.BRANCH_NAME}`.\n<${env.BUILD_URL}|View build details>"
+                sh """
+                    curl -X POST -H 'Content-type: application/json' \
+                    --data '{"text": "${message.replaceAll('"', '\\"')}"}' \
+                    '${env.SLACK_WEBHOOK_URL}'
+                """
+            }
+        }
+        failure {
+            script {
+                def message = ":x: *${params.PROJECT_NAME}* #${env.BUILD_NUMBER} failed on branch `${env.BRANCH_NAME}`.\n<${env.BUILD_URL}|Check the logs for details>"
+                sh """
+                    curl -X POST -H 'Content-type: application/json' \
+                    --data '{"text": "${message.replaceAll('"', '\\"')}"}' \
+                    '${env.SLACK_WEBHOOK_URL}'
+                """
+            }
+        }
+    }
+}

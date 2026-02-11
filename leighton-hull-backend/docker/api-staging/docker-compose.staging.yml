@@ -1,0 +1,36 @@
+services:
+  api:
+    container_name: api-staging
+    restart: always
+    build:
+      context: ../../
+      dockerfile: docker/api-staging/Dockerfile.staging
+      args:
+        - DATABASE_URL=${DATABASE_URL}
+    env_file:
+      - ../../env/.staging.env
+    ports:
+      - $EXPOSABLE_PORT:3000
+    command: >
+      sh ./scripts/start-staging.sh
+    stdin_open: true # docker run -i
+    tty: true
+    depends_on:
+      - db
+    volumes:
+      - api-staging-public:/app/public/protected_files
+  db:
+    container_name: api-staging-mysql
+    image: mysql:8.0-oracle
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD_}
+    ports:
+      - "3356:3306"
+    volumes:
+      - api-staging-db:/var/lib/mysql
+    stdin_open: false
+
+volumes:
+  api-staging-db: {}
+  api-staging-public: {}

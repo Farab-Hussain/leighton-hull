@@ -1,0 +1,25 @@
+FROM node:20.11.1-alpine
+
+# Define the build arguments
+ARG NEXT_PUBLIC_API_URL
+
+# Pass the build arguments to the environment
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+
+# init working directory
+WORKDIR /app
+RUN env > .env.local
+
+# copy package.json to working directory
+COPY package.json ./
+
+# install dependencies
+RUN npm install
+RUN apk update && apk add --no-cache openssl
+
+# copy all files to working directory
+COPY . .
+
+# run prod server
+RUN npm run build
+CMD ["npm", "run", "start"]

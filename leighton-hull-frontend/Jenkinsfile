@@ -1,0 +1,79 @@
+pipeline {
+    agent { label 'leightonHull' }
+
+    environment {
+        STAGING_DEPLOY_PATH = "/var/www/projects/website-staging"
+        PROD_DEPLOY_PATH    = "/var/www/projects/website-prod"
+
+        SLACK_WEBHOOK_URL = credentials('slack_webhook_leightonHull')
+    }
+
+    parameters {
+        string(name: 'SLACK_CHANNEL', defaultValue: '#leighton-hull-ci-cd', description: 'Slack channel (used in display only)')
+        string(name: 'PROJECT_NAME',  defaultValue: 'Leighton Hull Website', description: 'Project name for Slack messages')
+    }
+
+    stages {
+        stage('Init') {
+            steps {
+                script {
+                    def message = ":rocket: *${params.PROJECT_NAME}* #${env.BUILD_NUMBER} has started on branch `${env.BRANCH_NAME}`.\n<${env.BUILD_URL}|Follow the build here>"
+                    sh """
+                        curl -X POST -H 'Content-type: application/json' \
+                        --data '{"text": "${message.replaceAll('"', '\\"')}"}' \
+                        '${env.SLACK_WEBHOOK_URL}'
+                    """
+                }
+            }
+        }
+
+        stage('Deploy to Staging') {
+            when { branch 'dev' }
+            steps {
+                configFileProvider([configFile(fileId: 'website-staging', targetLocation: 'env/.staging.env')]) {
+                    sh '''
+                        rsync -av --delete --exclude='.git' ./ $STAGING_DEPLOY_PATH
+                        cd $STAGING_DEPLOY_PATH
+                        npm run start:staging
+                    '''
+                }
+            }
+        }
+
+        stage('Deploy to Production') {
+            when { branch 'master' }
+            steps {
+                configFileProvider([configFile(fileId: 'website-prod', targetLocation: 'env/.prod.env')]) {
+                    sh '''
+                        rsync -av --delete --exclude='.git' --exclude='node_modules/***' --filter='P node_modules/***' ./ \"$PROD_DEPLOY_PATH\"
+                        cd $PROD_DEPLOY_PATH
+                        npm run start:prod
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            script {
+                def message = ":white_check_mark: *${params.PROJECT_NAME}* #${env.BUILD_NUMBER} succeeded on branch `${env.BRANCH_NAME}`.\n<${env.BUILD_URL}|View build details>"
+                sh """
+                    curl -X POST -H 'Content-type: application/json' \
+                    --data '{"text": "${message.replaceAll('"', '\\"')}"}' \
+                    '${env.SLACK_WEBHOOK_URL}'
+                """
+            }
+        }
+        failure {
+            script {
+                def message = ":x: *${params.PROJECT_NAME}* #${env.BUILD_NUMBER} failed on branch `${env.BRANCH_NAME}`.\n<${env.BUILD_URL}|Check the logs for details>"
+                sh """
+                    curl -X POST -H 'Content-type: application/json' \
+                    --data '{"text": "${message.replaceAll('"', '\\"')}"}' \
+                    '${env.SLACK_WEBHOOK_URL}'
+                """
+            }
+        }
+    }
+}

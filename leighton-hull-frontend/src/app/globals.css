@@ -1,0 +1,361 @@
+@import "tailwindcss";
+* {
+  box-sizing: border-box;
+}
+
+@font-face {
+  font-family: climate-crisis-regular;
+  src: url(../../public/fonts/ClimateCrisis-Regular.ttf);
+}
+
+@font-face {
+  font-family: poppins-regular;
+  src: url(../../public/fonts/Poppins-Regular.ttf);
+}
+
+@font-face {
+  font-family: poppins-bold;
+  src: url(../../public/fonts/Poppins-Bold.ttf);
+}
+
+@font-face {
+  font-family: poppins-semi-bold;
+  src: url(../../public/fonts/Poppins-SemiBold.ttf);
+}
+
+@font-face {
+  font-family: poppins-bold-italic;
+  src: url(../../public/fonts/Poppins-Bold-Italic.ttf);
+}
+
+@font-face {
+  font-family: poppins-italic;
+  src: url(../../public/fonts/Poppins-Italic.ttf);
+}
+
+@font-face {
+  font-family: lora;
+  src: url(../../public/fonts/Lora-Italic.ttf);
+}
+
+@theme {
+  /* fonts */
+  --font-climate-crisis: "climate-crisis-regular", sans-serif;
+  --font-poppins: "poppins-regular", sans-serif;
+  --font-poppins-bold: "poppins-bold", sans-serif;
+  --font-poppins-semi-bold: "poppins-semi-bold", sans-serif;
+  --font-poppins-bold-italic: "poppins-bold-italic", italic;
+  --font-poppins-italic: "poppins-italic", italic;
+  --font-lora: "lora", italic;
+  /* colors */
+  --color-grey60: var(--grey60);
+  --color-grey50: var(--grey50);
+  --color-grey40: var(--grey40);
+  --color-grey20: var(--grey20);
+  --color-grey30: var(--grey30);
+  --color-white: var(--white);
+  --color-red: var(--red);
+  --color-orange: var(--orange);
+  --color-black5: var(--black5);
+  --color-orange30: var(--orange30);
+  --color-orange20: var(--orange20);
+  --color-black-transparent: var(--black-transparent);
+  --color-primary10: var(--primary10);
+  --color-primary20: var(--primary20);
+  --color-primary30: var(--primary30);
+  --color-primary40: var(--primary40);
+  /* breakpoints */
+  --breakpoint-xs: 321px;
+  --breakpoint-xs1: 391px;
+  --breakpoint-sm: 768px;
+  --breakpoint-md: 1200px;
+  --breakpoint-lg: 1560px;
+  /* font sizes */
+  --text-climate-crisis-h1: 40px;
+  --text-climate-crisis-h2: 30px;
+  --text-climate-crisis-h3: 24px;
+  --text-climate-crisis-h4: 20px;
+  --text-poppins-h1: 24px;
+  --text-poppins-h2: 20px;
+  --text-poppins-h3: 20px;
+  --text-poppins-p1: 20px;
+  --text-poppins-p2: 17px;
+  --text-poppins-p3: 15px;
+  --text-poppins-p4: 14px;
+  --text-poppins-p5: 12px;
+  --text-poppins-l1: 24px;
+  --text-poppins-l2: 16px;
+  --text-poppins-l3: 15px;
+  --text-lora-p1: 30px;
+  --text-lora-p2: 20px;
+  --text-lora-l1: 32px;
+  --text-lora-l2: 16px;
+  --text-lora-l3: 15px;
+
+  /* leading */
+  --leading-climate-crisis-h1: 48px;
+  --leading-climate-crisis-h2: 40px;
+  --leading-climate-crisis-h3: 30px;
+  --leading-climate-crisis-h4: 24px;
+  --leading-poppins-h1: 32px;
+  --leading-poppins-h2: 28px;
+  --leading-poppins-h3: 28px;
+  --leading-poppins-p1: 28px;
+  --leading-poppins-p2: 24px;
+  --leading-poppins-p3: 22px;
+  --leading-poppins-p4: 18px;
+  --leading-poppins-p5: 12px;
+  --leading-lora-p1: 40px;
+  --leading-lora-p2: 28px;
+  --leading-poppins-l1: 32px;
+  --leading-poppins-l2: 20px;
+  --leading-poppins-l3: 18px;
+}
+
+/* defaults  */
+/* === HEADINGS (Primary: Climate Crisis / Secondary: Poppins) === */
+@utility h1-primary {
+  font-family: var(--font-climate-crisis);
+  font-size: var(--text-climate-crisis-h1);
+  line-height: var(--leading-climate-crisis-h1);
+  font-weight: 400;
+}
+@utility h2-primary {
+  font-family: var(--font-climate-crisis);
+  font-size: var(--text-climate-crisis-h2);
+  line-height: var(--leading-climate-crisis-h2);
+  font-weight: 400;
+}
+@utility h3-primary {
+  font-family: var(--font-climate-crisis);
+  font-size: var(--text-climate-crisis-h3);
+  line-height: var(--leading-climate-crisis-h3);
+  font-weight: 400;
+}
+@utility h4-primary {
+  font-family: var(--font-climate-crisis);
+  font-size: var(--text-climate-crisis-h4);
+  line-height: var(--leading-climate-crisis-h4);
+  font-weight: 400;
+}
+
+/* === Secondary Headings (Poppins) === */
+@utility h1-secondary {
+  font-family: var(--font-poppins-semi-bold);
+  font-size: var(--text-poppins-h1);
+  line-height: var(--leading-poppins-h1);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+@utility h2-secondary {
+  font-family: var(--font-poppins-bold);
+  font-size: var(--text-poppins-h2);
+  line-height: var(--leading-poppins-h2);
+  font-weight: 700;
+}
+@utility h3-secondary {
+  font-family: var(--font-poppins-semi-bold);
+  font-size: var(--text-poppins-h3);
+  line-height: var(--leading-poppins-h3);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* === PARAGRAPHS (Poppins / Primary) === */
+@utility text-p1-poppins {
+  font-family: var(--font-poppins);
+  font-size: var(--text-poppins-p1);
+  line-height: var(--leading-poppins-p1);
+  font-weight: 400;
+}
+@utility text-p1-poppins-bold {
+  font-family: var(--font-poppins-bold);
+  font-size: var(--text-poppins-p1);
+  line-height: var(--leading-poppins-p1);
+  font-weight: 700;
+}
+@utility text-p2-poppins {
+  font-family: var(--font-poppins);
+  font-size: var(--text-poppins-p2);
+  line-height: var(--leading-poppins-p2);
+  font-weight: 400;
+}
+@utility text-p2-poppins-bold {
+  font-family: var(--font-poppins-bold);
+  font-size: var(--text-poppins-p2);
+  line-height: var(--leading-poppins-p2);
+  font-weight: 700;
+}
+@utility text-p3-poppins {
+  font-family: var(--font-poppins);
+  font-size: var(--text-poppins-p3);
+  line-height: var(--leading-poppins-p3);
+  font-weight: 400;
+}
+@utility text-p3-poppins-bold {
+  font-family: var(--font-poppins-bold);
+  font-size: var(--text-poppins-p3);
+  line-height: var(--leading-poppins-p3);
+  font-weight: 700;
+}
+@utility text-p4-poppins {
+  font-family: var(--font-poppins);
+  font-size: var(--text-poppins-p4);
+  line-height: var(--leading-poppins-p4);
+  font-weight: 400;
+}
+@utility text-p5-poppins {
+  font-family: var(--font-poppins);
+  font-size: var(--text-poppins-p5);
+  line-height: var(--leading-poppins-p5);
+  font-weight: 400;
+}
+
+/* === PARAGRAPHS (Lora / Primary) === */
+@utility text-p1-lora {
+  font-family: var(--font-lora);
+  font-size: var(--text-lora-p1);
+  line-height: var(--leading-lora-p1);
+  font-weight: 400;
+}
+@utility text-p2-lora {
+  font-family: var(--font-lora);
+  font-size: var(--text-lora-p2);
+  line-height: var(--leading-lora-p2);
+  font-weight: 400;
+}
+
+/* === LINKS (Poppins / Link) === */
+@utility text-l1-link {
+  font-family: var(--font-poppins);
+  font-size: var(--text-poppins-l1);
+  line-height: var(--leading-poppins-l1);
+  font-weight: 400;
+}
+@utility text-l2-link {
+  font-family: var(--font-poppins-bold);
+  font-size: var(--text-poppins-l2);
+  line-height: var(--leading-poppins-l2);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+@utility text-l3-link {
+  font-family: var(--font-poppins);
+  font-size: var(--text-poppins-l3);
+  line-height: var(--leading-poppins-l3);
+  font-weight: 400;
+}
+
+:root {
+  --red: #e50742;
+  --black-transparent: #011613;
+  --grey50: #011613;
+  --grey40: #3a3c3c;
+  --grey30: #acaeae;
+  --grey20: #f5f5f5;
+  --white: #ffffff;
+  --primary10: #e7ebea;
+  --primary20: #7fa8a2;
+  --primary30: #184b44;
+  --primary40: #043730;
+  --header-height: 76px;
+}
+
+@media (min-width: 1560px) {
+  :root {
+    --header-height: 84px;
+  }
+}
+
+/* ::-webkit-scrollbar-button {
+  display: none;
+} */
+
+body {
+  overflow: overlay;
+  @apply text-grey50;
+}
+
+::-webkit-scrollbar {
+  width: 2px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #323131;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+textarea {
+  resize: none;
+}
+
+::placeholder {
+  color: var(--grey30);
+  opacity: 1;
+}
+
+.bullet-text,
+.bullet-text-article {
+  @apply relative pl-5.5 before:absolute before:top-[0.6em] before:left-2 before:h-1 before:w-1 before:rounded-full;
+}
+
+.bullet-text::before {
+  @apply bg-grey40;
+}
+
+.bullet-text-article::before {
+  @apply bg-grey20;
+}
+
+@layer base {
+  .preload-bg {
+    background-image:
+      url("/images/background-of-speaker.webp"), url("/images/background-of-speaker-sm.webp"),
+      url("/images/background-of-speaker-md.webp"), url("/images/background-of-speaker-lg.webp"),
+      url("/images/background-of-speaker.webp");
+  }
+}
+
+@keyframes loaderSlideUp {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+.slide-up {
+  animation: loaderSlideUp 0.9s ease-in-out forwards;
+}
+
+.body-lock {
+  overflow: hidden;
+  height: 100vh;
+}

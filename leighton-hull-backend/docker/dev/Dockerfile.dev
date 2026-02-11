@@ -1,0 +1,16 @@
+FROM node:20.18.0-alpine
+# dockerfile for nestjs app
+
+# init working directory
+WORKDIR /app
+
+# copy package.json to working directory
+COPY package.json package-lock.json ./
+
+# install dependencies
+RUN npm install
+
+# copy all files to working directory
+COPY . .
+
+RUN npx prisma generate

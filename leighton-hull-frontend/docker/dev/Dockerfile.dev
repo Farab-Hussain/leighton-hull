@@ -1,0 +1,16 @@
+FROM node:20.0.0-alpine
+# dockerfile for nextjs14 app in dev mode
+
+WORKDIR /app
+
+# copy package.json to working directory
+COPY package.json ./
+
+# install dependencies
+RUN npm install
+
+# copy all files to working directory
+COPY . .
+
+# run dev server
+CMD ["npm", "run", "dev"]

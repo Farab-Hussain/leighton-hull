@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model ContactRequest {
+  // fields
+  id            Int    @id @default(autoincrement())
+  name          String @db.VarChar(255)
+  email         String @db.VarChar(255)
+  typeOfInquiry String @map("type_of_inquiry")
+  message       String @db.Text
+
+  // metadata
+  createdAt DateTime @default(now())
+
+  @@map("contact_requests")
+}
+
+model RequestAsSpeaker {
+  // fields
+  id           Int      @id @default(autoincrement())
+  name         String   @db.VarChar(255)
+  email        String   @db.VarChar(255)
+  organization String   @db.VarChar(255)
+  eventType    String   @map("event_type")
+  date         DateTime
+  message      String?  @db.Text
+
+  // metadata
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("requests_as_speaker")
+}

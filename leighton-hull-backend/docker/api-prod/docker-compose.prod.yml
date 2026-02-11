@@ -1,0 +1,37 @@
+services:
+  api:
+    container_name: api-prod
+    restart: always
+    build:
+      context: ../../
+      dockerfile: docker/api-prod/Dockerfile.prod
+      args:
+        - DATABASE_URL=${DATABASE_URL}
+    env_file:
+      - ../../env/.prod.env
+    ports:
+      - $EXPOSABLE_PORT:3000
+    command: >
+      sh ./scripts/start-prod.sh
+    stdin_open: true # docker run -i
+    tty: true
+    depends_on:
+      - db
+    volumes:
+      - api-prod-public:/app/public/protected_files
+
+  db:
+    container_name: api-prod-mysql
+    image: mysql:8.0-oracle
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD_}
+    ports:
+      - "3366:3306"
+    volumes:
+      - api-prod-db:/var/lib/mysql
+    stdin_open: false
+
+volumes:
+  api-prod-db: {}
+  api-prod-public: {}

@@ -1,0 +1,25 @@
+FROM node:20-alpine
+# dockerfile for nestjs app
+
+# init working directory
+WORKDIR /app
+
+# copy package.json to working directory
+COPY package.json package-lock.json ./
+
+# install dependencies
+RUN npm install
+RUN apk update && apk add --no-cache openssl
+
+# prisma
+COPY prisma ./prisma/
+RUN npx prisma generate
+
+# copy all files to working directory
+COPY . .
+
+# build app
+RUN npm run build
+
+# run prod server
+CMD ["sh", "./scripts/start-prod.sh"]

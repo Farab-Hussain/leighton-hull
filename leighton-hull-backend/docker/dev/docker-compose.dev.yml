@@ -1,0 +1,38 @@
+services:
+  api:
+    container_name: api-dev
+    build:
+      context: ../../
+      dockerfile: docker/dev/Dockerfile.dev
+      args:
+        - DATABASE_URL=${DATABASE_URL}
+    volumes:
+      - ../../src:/app/src
+      - ../../prisma:/app/prisma
+      - api-dev-node-modules:/app/node_modules
+    env_file:
+      - ../../env/.dev.env
+    ports:
+      - $EXPOSABLE_PORT:3000
+    command: >
+      sh ./scripts/start-dev.sh
+    stdin_open: true # docker run -i
+    tty: true
+    depends_on:
+      - db
+
+  db:
+    container_name: api-dev-mysql
+    image: mysql:8.0-oracle
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD_}
+    ports:
+      - "3316:3306"
+    volumes:
+      - api-db:/var/lib/mysql
+    stdin_open: false
+
+volumes:
+  api-db: {}
+  api-dev-node-modules: {}
