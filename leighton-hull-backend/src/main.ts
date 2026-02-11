@@ -10,7 +10,11 @@ import helmet from "helmet";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors();
+  app.enableCors({
+    origin: "https://leighton-hull-backend.vercel.app",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
+  });
   app.use(cookieParser());
   app.use(useragent.express());
 
