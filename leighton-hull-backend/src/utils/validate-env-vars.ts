@@ -10,7 +10,7 @@ export default async function validateEnvVars(envVars: Record<string, unknown>) 
       .filter(line => line.trim().length > 0)
       .filter(line => !line.startsWith("#"));
   } catch (_) {
-    throw new Error("Failed to validate environment variables.");
+    return;
   }
 
   templateEnvVars.forEach(envVarDeclaration => {

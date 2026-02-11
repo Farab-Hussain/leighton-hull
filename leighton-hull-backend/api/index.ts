@@ -4,14 +4,17 @@ import * as path from "node:path";
 import { ExpressAdapter } from "@nestjs/platform-express";
 import { NestFactory } from "@nestjs/core";
 import { HttpStatus, ValidationPipe } from "@nestjs/common";
-import * as cookieParser from "cookie-parser";
-import * as useragent from "express-useragent";
 import helmet from "helmet";
 
 let cachedServer: ReturnType<typeof express> | null = null;
 
 async function createServer() {
   const expressApp = express();
+
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const cookieParser = require("cookie-parser");
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const useragent = require("express-useragent");
 
   // Make TS path alias "@/" work at runtime for compiled JS in dist/
   // eslint-disable-next-line @typescript-eslint/no-var-requires
